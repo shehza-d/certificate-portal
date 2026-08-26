@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certificate Portal Search</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f3f4f6;
+        color: #333;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .header h1 {
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        border: 2px solid #d1d5db;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-box:focus {
+        border-color: #3b82f6;
+      }
+
+      .results-container {
+        margin-top: 2rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      .card {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 5px solid #3b82f6;
+        transition: transform 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .student-info h3 {
+        margin-bottom: 0.25rem;
+        color: #111827;
+      }
+
+      .student-info p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .download-btn {
+        background-color: #3b82f6;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.3s;
+      }
+
+      .download-btn:hover {
+        background-color: #2563eb;
+      }
+
+      .no-results {
+        text-align: center;
+        color: #6b7280;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Download Your Certificate</h1>
+        <p>Search by your Name, Father's Name, or Roll No</p>
+      </div>
+
+      <input
+        type="text"
+        id="searchInput"
+        class="search-box"
+        placeholder="e.g. Abdullah, Shakeel, or 904861..."
+      />
+
+      <div id="results" class="results-container">
+        <!-- Results will be injected here via JS -->
+      </div>
+    </div>
+
+    <script>
+      // Yahan apna generated JSON array paste karein
+      const studentsData = [
+        {
+          name: "Muhammad Hassan Tariq",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871880",
+          email: "tariqsohail27614@gmail.com",
+          certificatePdfNo: "01-61.pdf",
+        },
+        {
+          name: "Muhammad Anas Ghuman",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871781",
+          email: "ghumanfiaz@gmail.com",
+          certificatePdfNo: "01-62.pdf",
+        },
+        {
+          name: "Abdul Haseeb Khan",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "876928",
+          email: "jiqbalkhan037@gmail.com",
+          certificatePdfNo: "01-63.pdf",
+        },
+        {
+          name: "Muhammad Taimur Asad",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872866",
+          email: "shaistahussain710@gmail.com",
+          certificatePdfNo: "01-64.pdf",
+        },
+        {
+          name: "Hassan Raza",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "873383",
+          email: "boomspidy5@gmail.com",
+          certificatePdfNo: "01-65.pdf",
+        },
+        {
+          name: "M Hassan",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872450",
+          email: "irahadkhan219@gmail.com",
+          certificatePdfNo: "01-66.pdf",
+        },
+        {
+          name: "Muhammad Hassan Tariq",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871880",
+          email: "tariqsohail27614@gmail.com",
+          certificatePdfNo: "01-67.pdf",
+        },
+        {
+          name: "Mohammad Wasay Ullah",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872196",
+          email: "wasayullahmohammad@gmail.com",
+          certificatePdfNo: "01-68.pdf",
+        },
+        {
+          name: "Muhammad Wasif Hameed",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871391",
+          email: "muhammadwasifhameed@gmail.com",
+          certificatePdfNo: "01-69.pdf",
+        },
+        {
+          name: "Mohammad Hashir",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872185",
+          email: "m.hashir3690@gmail.com",
+          certificatePdfNo: "01-70.pdf",
+        },
+        {
+          name: "Syed Muneeb Ali",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872761",
+          email: "alitahmina488@gmail.com",
+          certificatePdfNo: "01-71.pdf",
+        },
+        {
+          name: "Ubaid Waseem Lodhi",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872563",
+          email: "waseemlodhi79@gmail.com",
+          certificatePdfNo: "01-72.pdf",
+        },
+        {
+          name: "M Ahmed Raza Nasir",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "858319",
+          email: "ahmedt1cnoraza@gmail.com",
+          certificatePdfNo: "01-73.pdf",
+        },
+        {
+          name: "M Ahmed Raza Nasir",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872551",
+          email: "ahmedt1cnoraza@gmail.com",
+          certificatePdfNo: "01-74.pdf",
+        },
+        {
+          name: "Muhammad Anas Ghuman",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871781",
+          email: "ghumanfiaz@gmail.com",
+          certificatePdfNo: "01-75.pdf",
+        },
+        {
+          name: "Abdul Hannan",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871671",
+          email: "hanan02032026@gmail.com",
+          certificatePdfNo: "01-76.pdf",
+        },
+        {
+          name: "Muhammad Qasim Azeem",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "866990",
+          email: "ayyanbaba2030375@gmail.com",
+          certificatePdfNo: "01-77.pdf",
+        },
+        {
+          name: "Muhammad Shehryar",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872154",
+          email: "muzamila2z@gmail.com",
+          certificatePdfNo: "01-78.pdf",
+        },
+        {
+          name: "Muhammd Sarmad Waqas Rao",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871610",
+          email: "raohamidwaqas@gmail.com",
+          certificatePdfNo: "01-79.pdf",
+        },
+        {
+          name: "Shehzad Testing",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "866860",
+          email: "shehzaddatastoring@gmail.com",
+          certificatePdfNo: "01-80.pdf",
+        },
+        {
+          name: "Mohammad Hashir",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872185",
+          email: "m.hashir3690@gmail.com",
+          certificatePdfNo: "01-81.pdf",
+        },
+        {
+          name: "Muhammad Saad Ibne Waqas",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "871619",
+          email: "raowaqashomepc@gmail.com",
+          certificatePdfNo: "01-82.pdf",
+        },
+        {
+          name: "Muhammad Abdullah Sufyan",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "872500",
+          email: "Imran361farooq@gmail.com",
+          certificatePdfNo: "01-83.pdf",
+        },
+        {
+          name: "M Saqib Ameer Sahu",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "867087",
+          email: "",
+          certificatePdfNo: "01-84.pdf",
+        },
+        {
+          name: "Umar Hameed",
+          fatherName: "",
+          course: "AI & Game Creators",
+          cnic: "",
+          rollNo: "861649",
+          email: "",
+          certificatePdfNo: "01-85.pdf",
+        },
+        {
+          name: "Abdul Hadi Ahmed Qureshi Hashmi",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "870790",
+          email: "shakeelhashmi85@gmail.com",
+          certificatePdfNo: "01-64.pdf",
+        },
+        {
+          name: "Muhammad Hassaan Elahi",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "870753",
+          email: "abuhassaan203@gmail.com",
+          certificatePdfNo: "01-65.pdf",
+        },
+        {
+          name: "Muhammad Affan Hussain",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "874529",
+          email: "msaadhassan9955@gmail.com",
+          certificatePdfNo: "01-66.pdf",
+        },
+        {
+          name: "Ali Hussain",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "857401",
+          email: "fatimeh.asad@gmail.com",
+          certificatePdfNo: "01-67.pdf",
+        },
+        {
+          name: "Abeer Ali",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "858003",
+          email: "sam.zahid96@gmail.com",
+          certificatePdfNo: "01-68.pdf",
+        },
+        {
+          name: "Ahyan Naveed",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871073",
+          email: "www.naveedali1990@gmail.com",
+          certificatePdfNo: "01-69.pdf",
+        },
+        {
+          name: "Muhammad Moiz Khan",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871539",
+          email: "2030gtkhan@gmail.com",
+          certificatePdfNo: "01-70.pdf",
+        },
+        {
+          name: "Shaheer Rao",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "867048",
+          email: "shaheerrao677@gmail.com",
+          certificatePdfNo: "01-71.pdf",
+        },
+        {
+          name: "Maaz Khan",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871527",
+          email: "2030gtkhan@gmail.com",
+          certificatePdfNo: "01-72.pdf",
+        },
+        {
+          name: "Muhammad Burhan Azeem",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871978",
+          email: "ayyanbaba2030375@gmail.com",
+          certificatePdfNo: "01-73.pdf",
+        },
+        {
+          name: "M Najaf Ameer Sahu",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "867092",
+          email: "",
+          certificatePdfNo: "01-74.pdf",
+        },
+        {
+          name: "Abdul Hannan",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871660",
+          email: "hanan02032026@gmail.com",
+          certificatePdfNo: "01-75.pdf",
+        },
+        {
+          name: "Dawood Ahmed Gul",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "",
+          email: "",
+          certificatePdfNo: "01-76.pdf",
+        },
+        {
+          name: "Muhammad Ahmed",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "872011",
+          email: "ahmedsubhani159@gmail.com",
+          certificatePdfNo: "01-77.pdf",
+        },
+        {
+          name: "Umar Hameed",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "861649",
+          email: "",
+          certificatePdfNo: "01-78.pdf",
+        },
+        {
+          name: "Abdul Moeed",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871374",
+          email: "",
+          certificatePdfNo: "01-79.pdf",
+        },
+        {
+          name: "Ahmed Nadeem",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "",
+          email: "",
+          certificatePdfNo: "01-80.pdf",
+        },
+        {
+          name: "Muhammad Faiq Behzad",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871201",
+          email: "faiq0063@gmail.com",
+          certificatePdfNo: "01-81.pdf",
+        },
+        {
+          name: "Muhammad Aakif Hameed",
+          fatherName: "",
+          course: "Little Geniuses",
+          cnic: "",
+          rollNo: "871383",
+          email: "muhammadaakifhameed@gmail.com",
+          certificatePdfNo: "01-82.pdf",
+        },
+      ];
+
+      const searchInput = document.getElementById("searchInput");
+      const resultsContainer = document.getElementById("results");
+
+      // Course ke hisaab se folder path set karne ka function
+      const getCertificatePath = (course, fileName) => {
+        if (course === "Little Geniuses") {
+          return `./certificates/little-geniuses/${fileName}`;
+        } else if (course === "AI & Game Creators") {
+          return `./certificates/ai-game-creators/${fileName}`;
+        }
+        return "#";
+      };
+
+      // Real-time search render function
+      const renderResults = (query) => {
+        resultsContainer.innerHTML = ""; // Clear previous results
+
+        if (query.trim().length === 0) {
+          return; // Agar input empty hai to kuch mat dikhao
+        }
+
+        const filteredStudents = studentsData.filter((student) => {
+          const searchStr = query.toLowerCase();
+          return (
+            student.name.toLowerCase().includes(searchStr) ||
+            student.fatherName.toLowerCase().includes(searchStr) ||
+            student.rollNo.toLowerCase().includes(searchStr)
+          );
+        });
+
+        if (filteredStudents.length === 0) {
+          resultsContainer.innerHTML =
+            '<div class="no-results">No certificate found. Please check your spelling or Roll No.</div>';
+          return;
+        }
+
+        filteredStudents.forEach((student) => {
+          const filePath = getCertificatePath(
+            student.course,
+            student.certificatePdfNo,
+          );
+
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+                    <div class="student-info">
+                        <h3>${student.name}</h3>
+                        <p><strong>S/O:</strong> ${student.fatherName}</p>
+                        <p><strong>Roll No:</strong> ${student.rollNo}</p>
+                        <p><strong>Course:</strong> ${student.course}</p>
+                    </div>
+                    <a href="${filePath}" download class="download-btn" target="_blank">Download PDF</a>
+                `;
+          resultsContainer.appendChild(card);
+        });
+      };
+
+      // Event listener for real-time typing
+      searchInput.addEventListener("input", (e) => {
+        renderResults(e.target.value);
+      });
+    </script>
+  </body>
+</html>
