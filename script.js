@@ -1,5 +1,5 @@
 const searchInput = document.querySelector("#certificate-search");
-const clearButton = document.querySelector("#clear-search");
+// const clearButton = document.querySelector("#clear-search");
 const results = document.querySelector("#results");
 const searchHint = document.querySelector("#search-hint");
 
@@ -52,14 +52,17 @@ function resultCard(certificate) {
 function emptyState() {
   const state = document.createElement("div");
   state.className = "empty-state";
-  state.innerHTML = '<div class="empty-icon" aria-hidden="true">!</div><h2>No certificate found.</h2><p>Please contact management.</p>';
+  state.innerHTML = `<div class="empty-icon" aria-hidden="true">!</div>
+  <h2>No certificate found.</h2>
+  <p>Please <a href="https://wa.me/923033111499" target="_blank" id="management-contact">
+  contact management </a> </p>`;
   return state;
 }
 
 function render() {
   const query = normalise(searchInput.value.trim());
   results.replaceChildren();
-  clearButton.hidden = !query;
+  // clearButton.hidden = !query;
 
   if (!query) {
     searchHint.textContent = "Start typing to find your certificate.";
@@ -83,8 +86,8 @@ function render() {
 }
 
 searchInput.addEventListener("input", render);
-clearButton.addEventListener("click", () => {
-  searchInput.value = "";
-  searchInput.focus();
-  render();
-});
+// clearButton.addEventListener("click", () => {
+//   searchInput.value = "";
+//   searchInput.focus();
+//   render();
+// });
