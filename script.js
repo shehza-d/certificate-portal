@@ -4,7 +4,10 @@ const results = document.querySelector("#results");
 const searchHint = document.querySelector("#search-hint");
 
 function normalise(value) {
-  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]/g, "");
 }
 
 function resultCard(certificate) {
@@ -17,10 +20,12 @@ function resultCard(certificate) {
   const metadata = document.createElement("p");
   metadata.className = "metadata";
   const fields = [
-    ["Roll no ", '----'],
+    ["Roll no ", "----"],
     ["Course", certificate.course],
     ["Batch", certificate.batch],
-    ...(certificate.fatherName ? [["Father’s name", certificate.fatherName]] : [])
+    ...(certificate.fatherName
+      ? [["Father’s name", certificate.fatherName]]
+      : []),
   ];
   fields.forEach(([label, value]) => {
     const item = document.createElement("span");
@@ -72,7 +77,7 @@ function render() {
   const matches = certificates.filter((certificate) =>
     [certificate.name, certificate.rollNo, certificate.fatherName]
       .filter(Boolean)
-      .some((value) => normalise(value).includes(query))
+      .some((value) => normalise(value).includes(query)),
   );
 
   if (!matches.length) {
