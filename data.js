@@ -244,6 +244,14 @@ const certificates = [
     "AI & Game Creators",
     "ai-game-creators/Umar Hameed-SMIT-2026-AIG-B1-268.pdf",
   ],
+  //
+  ["Dawood Ahmed Gul", "", "Little Geniuses", "lg-new2/03-1.pdf"],
+  ["Muhammad Sohaib Qamar", "", "Little Geniuses", "lg-new2/03-2.pdf"],
+  ["Muhammad Ammar", "", "Little Geniuses", "lg-new2/03-3.pdf"],
+  ["Mahammad Aakif Hameed", "", "Little Geniuses", "lg-new2/03-4.pdf"],
+  ["Muhammad Saqlain Raza", "", "Little Geniuses", "lg-new2/03-5.pdf"],
+  ["Muhammad Zulqarnain Raza", "", "Little Geniuses", "lg-new2/03-6.pdf"],
+  ["Mohammad Rehan Khan", "", "Little Geniuses", "lg-new2/03-7.pdf"],
 ].map(([name, rollNo, course, file]) => ({
   name,
   rollNo,
