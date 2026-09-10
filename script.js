@@ -1,5 +1,4 @@
 const searchInput = document.querySelector("#certificate-search");
-// const clearButton = document.querySelector("#clear-search");
 const results = document.querySelector("#results");
 const searchHint = document.querySelector("#search-hint");
 
@@ -67,7 +66,6 @@ function emptyState() {
 function render() {
   const query = normalise(searchInput.value.trim());
   results.replaceChildren();
-  // clearButton.hidden = !query;
 
   if (!query) {
     searchHint.textContent = "Start typing to find your certificate.";
@@ -90,9 +88,24 @@ function render() {
   matches.forEach((certificate) => results.append(resultCard(certificate)));
 }
 
-searchInput.addEventListener("input", render);
-// clearButton.addEventListener("click", () => {
-//   searchInput.value = "";
-//   searchInput.focus();
-//   render();
-// });
+function restoreSearchFromUrl() {
+  searchInput.value = new URL(window.location.href).searchParams.get("q") || "";
+  render();
+}
+
+searchInput.addEventListener("input", () => {
+  const url = new URL(window.location.href);
+  const query = searchInput.value.trim();
+
+  if (query) {
+    url.searchParams.set("q", query);
+  } else {
+    url.searchParams.delete("q");
+  }
+
+  window.history.replaceState(window.history.state, "", url);
+  render();
+});
+
+window.addEventListener("popstate", restoreSearchFromUrl);
+restoreSearchFromUrl();

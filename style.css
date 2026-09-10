@@ -1,10 +1,8 @@
 :root {
   --ink: #13213e;
   --muted: #66728b;
-  --line: #dfe6f2;
   --blue: #315cea;
   --blue-dark: #2149ca;
-  --paper: #ffffff;
   --background: #f5f7fc;
 }
 
@@ -105,21 +103,6 @@ input::placeholder {
   color: #8994aa;
 }
 
-.clear-search {
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: 50%;
-  color: var(--muted);
-  background: #eef2f9;
-  font: inherit;
-  font-size: 1.45rem;
-  cursor: pointer;
-}
-.clear-search:hover {
-  color: var(--ink);
-  background: #e2e9f6;
-}
 .search-hint {
   min-height: 21px;
   margin: 20px 0 0;
