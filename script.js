@@ -123,7 +123,6 @@ async function saveNotePng(certificate, message) {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas is unavailable");
   const width = 1200;
-  const pixelRatio = 1.5;
   const left = 108;
   const textWidth = width - left * 2;
   const serif = '"Playfair Display", Georgia, serif';
@@ -174,9 +173,13 @@ async function saveNotePng(certificate, message) {
   }
 
   const height = Math.ceil(layout(false));
-  canvas.width = width * pixelRatio;
-  canvas.height = Math.ceil(height * pixelRatio);
-  ctx.scale(pixelRatio, pixelRatio);
+  // Export at up to 2400px wide, while keeping long letters within a
+  // mobile-friendly canvas size. PNG remains lossless at either size.
+  const pixelRatio = Math.min(2, Math.sqrt(12_000_000 / (width * height)));
+  canvas.width = Math.floor(width * pixelRatio);
+  const exportScale = canvas.width / width;
+  canvas.height = Math.ceil(height * exportScale);
+  ctx.scale(exportScale, exportScale);
   layout(true, height);
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
@@ -184,7 +187,8 @@ async function saveNotePng(certificate, message) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `A-Note-From-Your-Teacher-${certificate.name.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}.png`;
+  const fileName = certificate.recordLabel || certificate.name;
+  link.download = `A-note-from-your-Teacher-to-${fileName.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "")}.png`;
   document.body.append(link);
   link.click();
   link.remove();
@@ -208,9 +212,9 @@ function resultCard(certificate) {
   const metadata = document.createElement("p");
   metadata.className = "metadata";
   const fields = [
-    ...(certificate.rollNo ? [["Roll no", certificate.rollNo]] : []),
     ["Course", certificate.course],
     ["Batch", certificate.batch],
+    ...(certificate.recordLabel ? [["Record", certificate.recordLabel]] : []),
     ...(certificate.fatherName
       ? [["Father’s name", certificate.fatherName]]
       : []),
@@ -270,7 +274,7 @@ function render() {
   }
 
   const matches = certificates.filter((certificate) =>
-    [certificate.name, certificate.rollNo, certificate.fatherName]
+    [certificate.name, certificate.rollNo, certificate.fatherName, ...(certificate.searchNames || [])]
       .filter(Boolean)
       .some((value) => normalise(value).includes(query)),
   );
