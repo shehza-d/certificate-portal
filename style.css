@@ -338,7 +338,7 @@ input::placeholder {
   margin: 0;
 }
 .note-closing .note-signature {
-  margin-top: 5px;
+  margin-top: 12px;
   color: #294653;
   font-family: "Playfair Display", Georgia, serif;
   font-size: 1.33rem;

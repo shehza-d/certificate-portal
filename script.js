@@ -12,7 +12,11 @@ const noteDate = new Intl.DateTimeFormat("en-GB", {
 function batchLabel(certificate) {
   return [certificate.course, certificate.batch && `Batch ${certificate.batch}`]
     .filter(Boolean)
-    .join(" · ");
+    .join(" • ");
+}
+
+function noteMetaLabel(certificate) {
+  return [batchLabel(certificate), noteDate].filter(Boolean).join(" • ");
 }
 
 function makeText(tag, className, value) {
@@ -35,15 +39,12 @@ function noteCard(certificate) {
   card.append(
     makeText("p", "note-kicker", "A personal letter"),
     title,
-    makeText("p", "note-for", `For ${certificate.name}`)
+    makeText("p", "note-for", `Dear Student ${certificate.name} ✨`)
   );
 
   const details = document.createElement("p");
   details.className = "note-details";
-  details.append(
-    makeText("span", "", batchLabel(certificate)),
-    makeText("span", "", noteDate)
-  );
+  details.append(makeText("span", "", noteMetaLabel(certificate)));
   card.append(details);
 
   const letter = document.createElement("div");
@@ -122,25 +123,27 @@ async function saveNotePng(certificate, message) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas is unavailable");
+  // The downloaded keepsake uses a wider page than the on-screen card so
+  // long letters remain comfortable to read without becoming extremely tall.
   const width = 1200;
-  const left = 108;
+  const left = 70;
   const textWidth = width - left * 2;
   const serif = '"Playfair Display", Georgia, serif';
   const sans = '"DM Sans", Arial, sans-serif';
 
   function layout(draw, height = 0) {
-    let y = 106;
+    let y = 68;
     if (draw) {
       ctx.fillStyle = "#f8f3e9";
       ctx.fillRect(0, 0, width, height);
       ctx.strokeStyle = "#cdbb92";
       ctx.lineWidth = 3;
-      ctx.strokeRect(31, 31, width - 62, height - 62);
+      ctx.strokeRect(20, 20, width - 40, height - 40);
       ctx.strokeStyle = "#e2d5b9";
       ctx.lineWidth = 1;
-      ctx.strokeRect(43, 43, width - 86, height - 86);
+      ctx.strokeRect(29, 29, width - 58, height - 58);
       ctx.fillStyle = "#ba9866";
-      ctx.fillRect(left, 78, 80, 5);
+      ctx.fillRect(left, 50, 72, 4);
     }
     ctx.textBaseline = "top";
     function lines(text, font, color, lineHeight, after = 0) {
@@ -152,30 +155,29 @@ async function saveNotePng(certificate, message) {
       }
       y += after;
     }
-    lines("A PERSONAL LETTER", `700 23px ${sans}`, "#866c48", 32, 19);
-    lines("A Note From Your Teacher", `700 55px ${serif}`, "#233b4b", 73, 28);
-    lines(`For ${certificate.name}`, `600 41px ${serif}`, "#233b4b", 58, 18);
-    lines(`${batchLabel(certificate)}   •   ${noteDate}`, `600 24px ${sans}`, "#776b5b", 36, 37);
+    lines("A PERSONAL LETTER", `700 19px ${sans}`, "#866c48", 24, 9);
+    lines("A Note From Your Teacher", `700 44px ${serif}`, "#233b4b", 53, 13);
+    lines(`Dear Student ${certificate.name} ✨`, `600 32px ${serif}`, "#233b4b", 40, 8);
+    lines(noteMetaLabel(certificate), `600 20px ${sans}`, "#776b5b", 26, 19);
     if (draw) {
       ctx.fillStyle = "#cdbb92";
       ctx.fillRect(left, y, textWidth, 2);
     }
-    y += 49;
-    lines(message.greeting, `700 32px ${serif}`, "#253a45", 47, 21);
+    y += 26;
     for (const paragraph of message.paragraphs) {
-      lines(paragraph, `400 30px ${sans}`, "#3b4547", 48, 24);
+      lines(paragraph, `400 24px ${sans}`, "#3b4547", 32, 10);
     }
-    y += 6;
-    lines(message.reminder, `700 34px ${serif}`, "#29475a", 51, 46);
-    lines(message.signOff, `400 27px ${sans}`, "#5d5c54", 42, 8);
-    lines(message.signature, `700 35px ${serif}`, "#29475a", 50);
-    return y + 100;
+    y += 2;
+    lines(message.reminder, `700 28px ${serif}`, "#29475a", 36, 19);
+    lines(message.signOff, `400 23px ${sans}`, "#5d5c54", 31, 4);
+    lines(message.signature, `700 28px ${serif}`, "#29475a", 36);
+    return y + 56;
   }
 
   const height = Math.ceil(layout(false));
-  // Export at up to 2400px wide, while keeping long letters within a
-  // mobile-friendly canvas size. PNG remains lossless at either size.
-  const pixelRatio = Math.min(2, Math.sqrt(12_000_000 / (width * height)));
+  // Export at 2400px wide when possible. Very long letters scale only as
+  // needed to stay within a broadly supported canvas size. PNG is lossless.
+  const pixelRatio = Math.min(4 / 3, Math.sqrt(20_000_000 / (width * height)));
   canvas.width = Math.floor(width * pixelRatio);
   const exportScale = canvas.width / width;
   canvas.height = Math.ceil(height * exportScale);
