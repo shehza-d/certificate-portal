@@ -483,6 +483,17 @@ const certificates = [
     batch: "1",
     file: "certificates/bahria-web-b1-eab1/boys/25.Zarar Ahmed.pdf",
   },
+  {
+    name: "Mahad Nawaz",
+    course: "Web App Development",
+    batch: "1",
+    file: "certificates/bahria-web-b1-eab1/boys/26.Mahad.pdf",
+  },{
+    name: "Samiullah",
+    course: "Web App Development",
+    batch: "1",
+    file: "certificates/bahria-web-b1-eab1/boys/27.Samiullah.pdf",
+  },
 
   // Bahria Web B1 — girls
   {
@@ -742,5 +753,16 @@ const certificates = [
     course: "Web App Development",
     batch: "1",
     file: "certificates/bahria-web-b1-eab1/girls/43.pdf",
+  },
+  {
+    name: "Faiqa Shoukat",
+    course: "Web App Development",
+    batch: "1",
+    file: "certificates/bahria-web-b1-eab1/girls/44.pdf",
+  },{
+    name: "Noshila Shakeel",
+    course: "Web App Development",
+    batch: "1",
+    file: "certificates/bahria-web-b1-eab1/girls/45.pdf",
   },
 ];
